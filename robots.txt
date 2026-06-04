@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://jackcarvajal.github.io/agencia-dental/sitemap.xml

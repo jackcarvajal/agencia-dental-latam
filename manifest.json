@@ -1,0 +1,19 @@
+{
+  "name": "Bogotá Smile Studio",
+  "short_name": "BSS",
+  "description": "Premium dental tourism in Bogotá — same-quality restorations as Beverly Hills, 60% less cost.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#050505",
+  "theme_color": "#D4AF37",
+  "lang": "en",
+  "icons": [
+    { "src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["medical", "health", "travel"],
+  "screenshots": [
+    { "src": "/assets/og-home.jpg", "sizes": "1200x630", "type": "image/jpeg" }
+  ]
+}

@@ -1,0 +1,132 @@
+# Bogotá Smile Studio — Cloudflare Pages _headers
+# https://developers.cloudflare.com/pages/configuration/headers/
+
+# ─── SECURITY — todas las rutas ──────────────────────────
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Content-Security-Policy: default-src 'self'; report-uri /api/csp-report; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com https://connect.facebook.net https://www.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: https://www.facebook.com; connect-src 'self' https://zgihrwqfyvgyapbwzkvw.supabase.co https://generativelanguage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://www.clarity.ms https://www.facebook.com; frame-ancestors 'none'; media-src 'self' blob: https://*.supabase.co; upgrade-insecure-requests; object-src 'none'; base-uri 'self';
+
+# ─── CACHE — JS/CSS con versión (inmutable 1 año) ────────
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ─── CACHE — HTML (siempre revalidar) ────────────────────
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/agencia
+  Cache-Control: public, max-age=0, must-revalidate
+
+/privacy
+  Cache-Control: public, max-age=0, must-revalidate
+
+# ─── CACHE — manifests y SW ──────────────────────────────
+/manifest.json
+  Cache-Control: public, max-age=0, must-revalidate
+
+/sw.js
+  Cache-Control: no-store
+
+/robots.txt
+  Cache-Control: public, max-age=86400
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+# ─── AUTH — no indexar, no cachear ──────────────────────
+/login.html
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+/login
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+# ─── CLEAN URLs — must-revalidate ──────────────────────
+/agencia
+  Cache-Control: public, max-age=0, must-revalidate
+/concierge-colombia
+  Cache-Control: public, max-age=0, must-revalidate
+/dental-tourism-colombia
+  Cache-Control: public, max-age=0, must-revalidate
+/dental-concierge-colombia
+  Cache-Control: public, max-age=0, must-revalidate
+/veneers-bogota
+  Cache-Control: public, max-age=0, must-revalidate
+/dental-implants-bogota
+  Cache-Control: public, max-age=0, must-revalidate
+/all-on-4-bogota
+  Cache-Control: public, max-age=0, must-revalidate
+/hollywood-smile-bogota
+  Cache-Control: public, max-age=0, must-revalidate
+/crowns-bogota
+  Cache-Control: public, max-age=0, must-revalidate
+/smile-design-bogota
+  Cache-Control: public, max-age=0, must-revalidate
+/orthodontics-bogota
+  Cache-Control: public, max-age=0, must-revalidate
+/teeth-whitening-bogota
+  Cache-Control: public, max-age=0, must-revalidate
+/full-mouth-restoration-bogota
+  Cache-Control: public, max-age=0, must-revalidate
+/faq
+  Cache-Control: public, max-age=0, must-revalidate
+/sobre-nosotros
+  Cache-Control: public, max-age=0, must-revalidate
+/garantia
+  Cache-Control: public, max-age=0, must-revalidate
+/dental-financing-bogota
+  Cache-Control: public, max-age=0, must-revalidate
+/blog
+  Cache-Control: public, max-age=0, must-revalidate
+/treatments
+  Cache-Control: public, max-age=0, must-revalidate
+/savings-calculator
+  Cache-Control: public, max-age=0, must-revalidate
+/compare
+  Cache-Control: public, max-age=0, must-revalidate
+/patient-stories
+  Cache-Control: public, max-age=0, must-revalidate
+/bogota-dental-guide
+  Cache-Control: public, max-age=0, must-revalidate
+
+# ─── NOINDEX — formularios y páginas de pago ────────────
+/book
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/pay-assessment
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/gracias
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/leave-review
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/price-alert
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/referidos
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/my-case
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/reset-password
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+# ─── APP — no indexar, auth requerida ────────────────────
+/app/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
