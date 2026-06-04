@@ -47,31 +47,37 @@
     stickyEl.textContent = stickyCSS;
     document.head.appendChild(stickyEl);
 
-    var lang = document.documentElement.lang || 'en';
-    var isES = lang === 'es';
-
-    var bar = document.createElement('div');
-    bar.className = 'bss-sticky-cta';
-    bar.setAttribute('role', 'navigation');
-    bar.setAttribute('aria-label', isES ? 'Próximos pasos' : 'Next steps');
-    bar.innerHTML = [
-      '<p class="sc-msg">',
-        isES
-          ? '<strong>¿Listo para empezar?</strong> Revisión inicial gratis. Valoración clínica $200 (descontable).'
-          : '<strong>Ready to start?</strong> Free initial review. $200 clinical assessment — deductible from treatment.',
-      '</p>',
-      '<a href="/#consult" class="sc-btn">',
-        '<i class="fas fa-calendar-check" aria-hidden="true"></i> ',
-        isES ? 'Empezar gratis' : 'Start Free',
-      '</a>',
-      '<a href="/pay-assessment" class="sc-btn2">',
-        '<i class="fas fa-credit-card" aria-hidden="true"></i> ',
-        isES ? 'Pagar valoración $200' : 'Pay $200 Assessment',
-      '</a>',
-    ].join('');
-    document.addEventListener('DOMContentLoaded', function(){
+    /* Defer sticky bar creation until after setLang() has run (inline scripts) */
+    function _buildStickyBar() {
+      var isES = document.documentElement.lang === 'es' ||
+                 (localStorage.getItem('bss-lang') || '') === 'es';
+      var bar = document.createElement('div');
+      bar.className = 'bss-sticky-cta';
+      bar.setAttribute('role', 'navigation');
+      bar.setAttribute('aria-label', isES ? 'Próximos pasos' : 'Next steps');
+      bar.innerHTML = [
+        '<p class="sc-msg">',
+          isES
+            ? '<strong>¿Listo para empezar?</strong> Revisión inicial gratis. Valoración clínica $200 (descontable).'
+            : '<strong>Ready to start?</strong> Free initial review. $200 clinical assessment — deductible from treatment.',
+        '</p>',
+        '<a href="/#consult" class="sc-btn">',
+          '<i class="fas fa-calendar-check" aria-hidden="true"></i> ',
+          isES ? 'Empezar gratis' : 'Start Free',
+        '</a>',
+        '<a href="/pay-assessment" class="sc-btn2">',
+          '<i class="fas fa-credit-card" aria-hidden="true"></i> ',
+          isES ? 'Pagar valoración $200' : 'Pay $200 Assessment',
+        '</a>',
+      ].join('');
       document.body.appendChild(bar);
-    });
+    }
+    /* Use setTimeout(0) to run after all inline scripts on the page */
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function(){ setTimeout(_buildStickyBar, 0); });
+    } else {
+      setTimeout(_buildStickyBar, 0);
+    }
   }
 
   /* ─── TREATMENT NAV WIDGET ──────────────────────── */
@@ -106,24 +112,29 @@
     tnSt.textContent = tnCss;
     document.head.appendChild(tnSt);
 
-    var lang = document.documentElement.lang || 'en';
-    var navEl = document.createElement('nav');
-    navEl.className = 'bss-treat-nav';
-    navEl.setAttribute('aria-label', lang === 'es' ? 'Tratamientos disponibles' : 'All treatments');
-    navEl.innerHTML = TREATMENT_PAGES.map(function(p){
-      var isActive = currentPath === p.href || currentPath === p.href + '.html';
-      var label = lang === 'es' ? p.es : p.en;
-      return '<a href="' + p.href + '"' + (isActive ? ' class="active" aria-current="page"' : '') + '>' + label + '</a>';
-    }).join('');
-    // Inject after topbar
-    document.addEventListener('DOMContentLoaded', function(){
+    function _buildTreatNav() {
+      var isES = document.documentElement.lang === 'es' ||
+                 (localStorage.getItem('bss-lang') || '') === 'es';
+      var navEl = document.createElement('nav');
+      navEl.className = 'bss-treat-nav';
+      navEl.setAttribute('aria-label', isES ? 'Tratamientos disponibles' : 'All treatments');
+      navEl.innerHTML = TREATMENT_PAGES.map(function(p){
+        var isActive = currentPath === p.href || currentPath === p.href + '.html';
+        var label = isES ? p.es : p.en;
+        return '<a href="' + p.href + '"' + (isActive ? ' class="active" aria-current="page"' : '') + '>' + label + '</a>';
+      }).join('');
       var header = document.querySelector('header');
       if (header && header.nextSibling) {
         header.parentNode.insertBefore(navEl, header.nextSibling);
       } else {
         document.body.insertBefore(navEl, document.body.firstChild);
       }
-    });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function(){ setTimeout(_buildTreatNav, 0); });
+    } else {
+      setTimeout(_buildTreatNav, 0);
+    }
   }
 
   /* ─── SOCIAL PROOF WIDGET (index.html only) ────────── */
@@ -145,8 +156,11 @@
     document.head.appendChild(spSt);
 
     /* Notifications queue — realistic, not fake */
-    var _spLang = localStorage.getItem('bss-lang') || 'en-US';
-    var _isES   = _spLang === 'es';
+    /* Lee html.lang en el momento de mostrar (no al cargar) para que respete cambios dinámicos */
+    function _isESNow() {
+      return document.documentElement.lang === 'es' ||
+             (localStorage.getItem('bss-lang') || '') === 'es';
+    }
     var _notifications = [
       { en: '👀 <strong>3 people</strong> are viewing this page right now', es: '👀 <strong>3 personas</strong> están viendo esta página ahora' },
       { en: '🦷 New consultation submitted from <strong>Miami, FL</strong>', es: '🦷 Nueva consulta desde <strong>Miami, FL</strong>' },
@@ -164,7 +178,7 @@
     var _spIdx = 0;
     function _showNotification() {
       var n = _notifications[_spIdx % _notifications.length];
-      _spEl.innerHTML = '<span class="bss-sp-icon" aria-hidden="true">🔔</span>' + (_isES ? n.es : n.en);
+      _spEl.innerHTML = '<span class="bss-sp-icon" aria-hidden="true">🔔</span>' + (_isESNow() ? n.es : n.en);
       _spEl.classList.add('show');
       _spIdx++;
       setTimeout(function(){ _spEl.classList.remove('show'); }, 4000);
